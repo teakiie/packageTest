@@ -2,11 +2,11 @@ Package: packageTest
 Version: 0.0.1
 Title: Convenience functions used by Teakiie
 Description: A series of shortcuts for routine tasks
-Author: Tényi Á.
-Maintainer: Tényi Á. <tenyi.akos@ub.edu>
-Depends: RColorBrewer
+Author: Tenyi A.
+Maintainer: Tenyi A. <tenyi.akos@ub.edu>
+Depends: 
 Suggests:
-Imports: RColorBrewer
+Imports: 
 License: Artistic-2.0
 Collate: scripts.R
 LazyData: yes

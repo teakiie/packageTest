@@ -9,4 +9,5 @@ Suggests:
 Imports: 
 License: Artistic-2.0
 Collate: scripts.R
+mypar.R
 LazyData: yes

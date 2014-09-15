@@ -1,0 +1,86 @@
+#
+# Example: convert network (sNw) with BioXM names to entrez id (alias)
+#   SNW=data.frame(mapName(sNw[,1],alias),mapName(sNw[,2],alias))
+mapName <- function(names,map){
+  row.names(map) <- map[,1]
+  return(map[names,2])
+}
+
+# NULL test
+isOk <- function(x){
+  if(length(x) == 0){
+    return(FALSE)
+  }
+  else return(TRUE)
+}
+
+# select rows in a matrix that contains element
+rowContainsElement <- function(element,matrix){
+  rows = matrix[unique(which(matrix == element,arr.ind=TRUE)[,1]),]
+  return(rows)
+}
+
+
+# select columns in a matrix that contains element
+columnContainsElement <- function(element,matrix){
+  columns = matrix[,unique(which(matrix == element,arr.ind=TRUE)[,2])]
+  return(columns)
+}
+
+toMatrix <- function(v,mode=NULL){
+  if(!isOk(mode)){
+    if(is.vector(v)){
+      v=as.matrix(t(v))
+    }
+  }else{
+    if(is.vector(v)){
+      v=as.matrix(v)
+    }
+  }
+  return(v)
+}
+
+getEnd <- function(vector){
+  end = 0
+  len = length(vector)
+  while(end == 0){
+    end = vector[len]
+    len = len -1 
+  }
+  return(end)
+}
+
+getMxDiff <- function(m1,m2){
+  
+  l1=mclapply(seq_len(nrow(m1)), function(i) m1[i,])
+  l2=mclapply(seq_len(nrow(m2)), function(i) m2[i,])
+  
+  getNotContainsEnd <- function(row,end){
+    chain=row[which(row!=0)] 
+    if(sum(end %in% chain[1:(length(chain)-1)])==0)
+    {     
+      return(row)
+    }
+  }
+  
+  lc=mclapply(l1,getNotContainsEnd,end=endPos)
+  
+  lcc=lc[!sapply(lc, is.null)]
+  
+  wow=do.call(rbind,lapply(lcc,matrix,ncol=ncol(m1),byrow=TRUE))
+  
+  W <- matrix(unlist(wow), ncol=ncol(wow), 
+              dimnames=list(NULL, colnames(wow)))
+  
+  diff=na.omit(m2[W,which=TRUE])
+}
+
+
+#normalize vector or matrix function
+normalize <- function(x) {
+  if((max(x,na.rm=TRUE) - min(x, na.rm=TRUE))!=0){
+    (x - min(x, na.rm=TRUE))/(max(x,na.rm=TRUE) - min(x, na.rm=TRUE))
+  } else {
+    x - x
+  } 
+}
